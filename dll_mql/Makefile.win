@@ -1,0 +1,48 @@
+# Project: forex
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+OBJ      = obj/fourier.o obj/Renco_bar.o obj/GO.o obj/reed_file.o obj/init.o obj/MNK++.o obj/prognoz.o
+LINKOBJ  = obj/fourier.o obj/Renco_bar.o obj/GO.o obj/reed_file.o obj/init.o obj/MNK++.o obj/prognoz.o
+LIBS     = -L"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -m64 -s
+INCS     = -I"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include"
+CXXINCS  = -I"D:/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include"
+BIN      = exe/forex.dll
+CXXFLAGS = $(CXXINCS) -march=native -mtune=native -Ofast -m64 -std=c++14 -DBUILDING_DLL=1
+CFLAGS   = $(INCS) -march=native -mtune=native -Ofast -m64 -std=c++14 -DBUILDING_DLL=1
+DEL      = rm.exe -f
+DEF      = exe/libforex.def
+STATIC   = exe/libforex.a
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${DEL} $(OBJ) $(BIN) $(DEF) $(STATIC)
+
+$(BIN): $(LINKOBJ)
+	$(CPP) -shared $(LINKOBJ) -o $(BIN) $(LIBS) -Wl,--output-def,$(DEF),--out-implib,$(STATIC),--add-stdcall-alias
+
+obj/fourier.o: fourier.cpp
+	$(CPP) -c fourier.cpp -o obj/fourier.o $(CXXFLAGS)
+
+obj/Renco_bar.o: Renco_bar.cpp
+	$(CPP) -c Renco_bar.cpp -o obj/Renco_bar.o $(CXXFLAGS)
+
+obj/GO.o: GO.cpp
+	$(CPP) -c GO.cpp -o obj/GO.o $(CXXFLAGS)
+
+obj/reed_file.o: reed_file.cpp
+	$(CPP) -c reed_file.cpp -o obj/reed_file.o $(CXXFLAGS)
+
+obj/init.o: init.cpp
+	$(CPP) -c init.cpp -o obj/init.o $(CXXFLAGS)
+
+obj/MNK++.o: MNK++.cpp
+	$(CPP) -c MNK++.cpp -o obj/MNK++.o $(CXXFLAGS)
+
+obj/prognoz.o: prognoz.cpp
+	$(CPP) -c prognoz.cpp -o obj/prognoz.o $(CXXFLAGS)
