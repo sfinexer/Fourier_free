@@ -1,4 +1,4 @@
-﻿//+------------------------------------------------------------------+
+//+------------------------------------------------------------------+
 //|                                                         test.mq5 |
 //|                        Copyright 2015, MetaQuotes Software Corp. |
 //|                                             https://www.mql5.com |
@@ -13,7 +13,7 @@ double prognoz_chen_mql();
 #import 
 long tim;
 int rates_total_old;
-double progn_1=0.0,progn=0.0;
+double progn_1=0.0, progn=0.0;
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
@@ -115,14 +115,14 @@ void OnTick()
             progn_1=progn;
             progn=prognoz_chen_mql();
             Print("Результат прогноза = ",progn);
-            if((progn_1<delta) && (progn<delta)) // ставка на сел
+            if((progn_1<-delta) && (progn<-delta)) // ставка на сел
               {
-               Print("   Ставка на сел ");
+               Print("   Ставка на сел ", progn_1,"  ", progn);
                OrderSend(Symbol(),OP_SELL,0.01,Bid,3,Bid+0.0015,Bid-0.0010,"My order",0001,0,clrGreen);
               }
             if((progn_1>delta) && (progn>delta)) // ставка на бай
               {
-               Print("   Ставка на бай");
+               Print("   Ставка на бай", progn_1,"  ", progn);
                OrderSend(Symbol(),OP_BUY,0.01,Ask,3,Ask-0.0015,Ask+0.0010,"My order",0001,0,clrGreen);
               }
            }
@@ -132,7 +132,7 @@ void OnTick()
             handle=FileOpen(file,FILE_READ|FILE_WRITE|FILE_BIN);
             FileSeek(handle,0,SEEK_SET);
             // далее пишим временную метку
-            t=TimeCurrent()/60-500000;  // время в минутах!!!
+            t=TimeCurrent()/60-20000;  // время в минутах!!!
             FileWriteLong(handle,t);
             // так как новых ЗАВЕРШОННЫХ баров нет - закрываем файл
             FileClose(handle);
