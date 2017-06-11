@@ -6,7 +6,7 @@
 #property copyright "Copyright 2015, MetaQuotes Software Corp."
 #property link      "https://www.mql5.com"
 #property version   "1.00"
-extern int  time=1;  // шаг в минутах выставления ордеров
+extern int  time=5;  // шаг в минутах выставления ордеров
 extern double delta=0.0016;  // дельта между прогнозом и ценой
 #import "forex.dll" 
 double prognoz_chen_mql();
