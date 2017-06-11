@@ -1,6 +1,6 @@
 #include <all>
-#include "gl.h"   // описание глобальных переменных (перед нашим конфигом)
-int load(string file); // загрузка данных для внутренних целей
+#include "gl.h"   // Г®ГЇГЁГ±Г Г­ГЁГҐ ГЈГ«Г®ГЎГ Г«ГјГ­Г»Гµ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»Гµ (ГЇГҐГ°ГҐГ¤ Г­Г ГёГЁГ¬ ГЄГ®Г­ГґГЁГЈГ®Г¬)
+int load(string file); // Г§Г ГЈГ°ГіГ§ГЄГ  Г¤Г Г­Г­Г»Гµ Г¤Г«Гї ГўГ­ГіГІГ°ГҐГ­Г­ГЁГµ Г¶ГҐГ«ГҐГ©
 extern "C" __declspec(dllexport) int Renco(double *input, double *input1, __int64 *Time,
     double *output, __int64 *Renco_time, int kolinp);
 void interp(double *x, double *y, double *rezult, int N, int K);
@@ -10,34 +10,34 @@ extern "C" __declspec(dllexport) void ini();
 extern "C" __declspec(dllexport) double prognoz_chen_mql()
 {
   //  return (18.5);
-  put_prog="MQL5/Libraries/";
+  put_prog="MQL4/Libraries/";
   ini();
   vrem_kol=0;
-  // прогноз дальнейшего поведения цены
-  //cout<<"Чтение БД"<<endl;
+  // ГЇГ°Г®ГЈГ­Г®Г§ Г¤Г Г«ГјГ­ГҐГ©ГёГҐГЈГ® ГЇГ®ГўГҐГ¤ГҐГ­ГЁГї Г¶ГҐГ­Г»
+  //cout<<"Г—ГІГҐГ­ГЁГҐ ГЃГ„"<<endl;
   load((put_prog+"../Files/data.db").c_str());
   int progn=0;
   double prognoz, delta_prognoz;
   int RENKO;
-  double kol_iter=0.0; // количество итераций
-  // создаем ренко бары
+  double kol_iter=0.0; // ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГЁГІГҐГ°Г Г¶ГЁГ©
+  // Г±Г®Г§Г¤Г ГҐГ¬ Г°ГҐГ­ГЄГ® ГЎГ Г°Г»
   RENKO=Renco(Open, Close, Time, Renco_out, Renco_time, kol_blokov);
   inite++;
   //cout << "Renco=  "<<RENKO << " ("<<RENKO/60<<")"<< endl;
   tm* timeinfo;
   time_t seconds;
   int Hous;
-  int stepen=1;  // степень коррекционной кривой
+  int stepen=1;  // Г±ГІГҐГЇГҐГ­Гј ГЄГ®Г°Г°ГҐГЄГ¶ГЁГ®Г­Г­Г®Г© ГЄГ°ГЁГўГ®Г©
   int i, j;
   double *x, *y, *rezult, *output;
   double old_line, test_2;
-  // выделим память на 100 часов
-  x = new double[100*60+100*100]; // начальные данные
-  y = new double[100*60+100*100]; // начальные данные
+  // ГўГ»Г¤ГҐГ«ГЁГ¬ ГЇГ Г¬ГїГІГј Г­Г  100 Г·Г Г±Г®Гў
+  x = new double[100*60+100*100]; // Г­Г Г·Г Г«ГјГ­Г»ГҐ Г¤Г Г­Г­Г»ГҐ
+  y = new double[100*60+100*100]; // Г­Г Г·Г Г«ГјГ­Г»ГҐ Г¤Г Г­Г­Г»ГҐ
 // output= new double[Hous*60+Hous*100];
   rezult = new double[100];
   output= new double[100*60+100*100];
-  // обнуление данных
+  // Г®ГЎГ­ГіГ«ГҐГ­ГЁГҐ Г¤Г Г­Г­Г»Гµ
   for (i=0; i<100*60+100*100; i++)
     {
       x[i]=0.0;
@@ -55,40 +55,40 @@ extern "C" __declspec(dllexport) double prognoz_chen_mql()
           x[i]=i;
           y[i]=(Renco_out[RENKO-Hous*60+i]+Renco_out[RENKO-Hous*60+i])/2.0;
         }
-      //cout<<"Старт интерполятора"<<endl;
+      //cout<<"Г‘ГІГ Г°ГІ ГЁГ­ГІГҐГ°ГЇГ®Г«ГїГІГ®Г°Г "<<endl;
       interp(x, y, rezult, Hous*60, stepen);
       // cout<<"OK"<<endl;
       //return (9);
-      // cout<<"Старт Фурье"<<endl;
+      // cout<<"Г‘ГІГ Г°ГІ Г”ГіГ°ГјГҐ"<<endl;
       fourier_V1(y, output, 60*Hous, 30*Hous);
       //cout<<"OK"<<endl;
       //return (00);
-      // Считаем базовое значение апроксимации
+      // Г‘Г·ГЁГІГ ГҐГ¬ ГЎГ Г§Г®ГўГ®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ Г ГЇГ°Г®ГЄГ±ГЁГ¬Г Г¶ГЁГЁ
       old_line=0.0;
       for(i=0; i<=stepen; i++)
         {
-          old_line+=rezult[i]*pow(60*Hous,i);  // текущая точка апроксимации
+          old_line+=rezult[i]*pow(60*Hous,i);  // ГІГҐГЄГіГ№Г Гї ГІГ®Г·ГЄГ  Г ГЇГ°Г®ГЄГ±ГЁГ¬Г Г¶ГЁГЁ
         }
-      j=60*Hous+Hous*10;  // прогнозная точка
+      j=60*Hous+Hous*10;  // ГЇГ°Г®ГЈГ­Г®Г§Г­Г Гї ГІГ®Г·ГЄГ 
       prognoz=0.0;
       for(i=0; i<=stepen; i++)
         {
-          prognoz+=rezult[i]*pow(j,i); // прогноз по 2 порядку
+          prognoz+=rezult[i]*pow(j,i); // ГЇГ°Г®ГЈГ­Г®Г§ ГЇГ® 2 ГЇГ®Г°ГїГ¤ГЄГі
         }
-      test_2=output[j];  // прогноз по фурье
-      // коррекционный прогноз по фурье
-      test_2+=(prognoz-old_line)*0.6; // коррекционный прогноз по фурье
+      test_2=output[j];  // ГЇГ°Г®ГЈГ­Г®Г§ ГЇГ® ГґГіГ°ГјГҐ
+      // ГЄГ®Г°Г°ГҐГЄГ¶ГЁГ®Г­Г­Г»Г© ГЇГ°Г®ГЈГ­Г®Г§ ГЇГ® ГґГіГ°ГјГҐ
+      test_2+=(prognoz-old_line)*0.6; // ГЄГ®Г°Г°ГҐГЄГ¶ГЁГ®Г­Г­Г»Г© ГЇГ°Г®ГЈГ­Г®Г§ ГЇГ® ГґГіГ°ГјГҐ
       delta_prognoz+=(test_2-Close[kol_blokov-1])*(atof(GO[kol_mas+100][2].c_str())+1.0);
-      test_2=test_2+(atof(GO[kol_mas+100][1].c_str())*(test_2-Close[kol_blokov-1]));  // корректировка
-      //fprognoz->rezult_mass[fprognoz->kol_mas]=test_2;   // цель прогноза и корректировка
-      //fprognoz->rezult_time_mass[fprognoz->kol_mas]=Renco_time[RENKO-Hous*60]*60;  // массив начала счета
+      test_2=test_2+(atof(GO[kol_mas+100][1].c_str())*(test_2-Close[kol_blokov-1]));  // ГЄГ®Г°Г°ГҐГЄГІГЁГ°Г®ГўГЄГ 
+      //fprognoz->rezult_mass[fprognoz->kol_mas]=test_2;   // Г¶ГҐГ«Гј ГЇГ°Г®ГЈГ­Г®Г§Г  ГЁ ГЄГ®Г°Г°ГҐГЄГІГЁГ°Г®ГўГЄГ 
+      //fprognoz->rezult_time_mass[fprognoz->kol_mas]=Renco_time[RENKO-Hous*60]*60;  // Г¬Г Г±Г±ГЁГў Г­Г Г·Г Г«Г  Г±Г·ГҐГІГ 
     }
   delete [] x;
   delete [] y;
   delete [] rezult;
   delete [] output;
   delta_prognoz/=kol_iter;
-  //fprognoz->time=Time[kol_blokov-1]*60;  // последнее время
+  //fprognoz->time=Time[kol_blokov-1]*60;  // ГЇГ®Г±Г«ГҐГ¤Г­ГҐГҐ ГўГ°ГҐГ¬Гї
   //fprognoz->rezult=progn/2;
   //fprognoz->End_chen=Close[kol_blokov-1];
   return (delta_prognoz);
